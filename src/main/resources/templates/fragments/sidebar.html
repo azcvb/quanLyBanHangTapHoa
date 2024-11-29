@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="sidebar" class='active' th:fragment="sidebar">
+    <div class="sidebar-wrapper active">
+        <div class="sidebar-header">
+            <h3>FRESH LAND</h3>
+            <p>MARKET</p>
+        </div>
+        <div class="sidebar-menu">
+            <ul class="menu">
+
+
+                <li class='sidebar-title'>Menu</li>
+
+
+
+                <li class="sidebar-item">
+                    <a href="thongke" class='sidebar-link'>
+                        <i data-feather="home" width="20"></i>
+                        <span><b>Thống Kê & Báo Cáo</b></span>
+                    </a>
+
+                </li>
+                <li class="sidebar-item">
+                    <a href="banhang" class='sidebar-link'>
+                        <i data-feather="shopping-cart" width="20"></i>
+                        <span><b>Bán Hàng</b></span>
+                    </a>
+
+                </li>
+                <li class="sidebar-item">
+                    <a href="sanphams" class='sidebar-link'>
+                        <i data-feather="shopping-bag" width="20"></i>
+                        <span><b>Sản Phẩm</b></span>
+                    </a>
+
+                </li>
+                <li class="sidebar-item">
+                    <a href="quanlykho" class='sidebar-link'>
+                        <i data-feather="archive" width="20"></i>
+                        <span><b>Kho Hàng</b></span>
+                    </a>
+
+                </li>
+               
+              
+                <li class="sidebar-item  has-sub">
+                    <a href="#" class='sidebar-link'>
+                        <i data-feather="clipboard" width="20"></i>
+                        <span><b>Hóa Đơn</b></span>
+                    </a>
+
+                    <ul class="submenu ">
+
+                        <li>
+                            <a href="hoadonban">Hóa Đơn Bán Hàng</a>
+                        </li>
+
+                        <li>
+                            <a href="hoadonnhap">Hóa Đơn Nhập Hàng</a>
+                        </li>
+
+                    </ul>
+
+                </li>
+                <li class="sidebar-item">
+                    <a href="khuyenmai" class='sidebar-link'>
+                        <i data-feather="gift" width="20"></i>
+                        <span><b>Khuyến Mại</b></span>
+                    </a>
+				<li class="sidebar-item">
+                    <a href="ncc" class='sidebar-link'>
+                        <i data-feather="truck" width="20"></i>
+                        <span><b>Nhà Cung Cấp</b></span>
+                    </a>
+
+                </li>
+                
+
+				<li class="sidebar-item">
+                    <a href="nhanvien" class='sidebar-link'>
+                        <i data-feather="users" width="20"></i>
+                        <span><b>Nhân Viên</b></span>
+                    </a>
+
+                </li>
+
+
+               
+
+
+
+            </ul>
+        </div>
+        <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+    </div>
+</div>
+
+</script>
+</body>
+</html>

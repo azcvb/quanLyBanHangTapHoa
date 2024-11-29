@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/dashboard}">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+	integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+	crossorigin="anonymous"></script>
+<title>Quản Lý Sản Phẩm</title>
+<style>
+.hidden {
+	display: none;
+}
+
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+	padding: 8px;
+	width: 100%;
+	table-layout: fixed;
+}
+
+th, td {
+	text-align: left;
+	vertical-align: middle;
+	border: none !important;
+}
+
+th {
+	background-color: #f2f2f2;
+	height: 40px;
+}
+
+button {
+	padding: 5px 10px;
+	margin: 5px;
+	cursor: pointer;
+}
+
+.add-product {
+	margin-bottom: 15px;
+}
+
+td:nth-child(1) {
+	width: 10% !important;
+}
+
+td:nth-child(2) {
+	width: 15% !important;
+}
+
+td:nth-child(3) {
+	width: 15% !important;
+}
+
+td:nth-child(4) {
+	width: 10% !important;
+}
+
+td:nth-child(5) {
+	width: 20% !important;
+}
+
+td:nth-child(6) {
+	width: 10% !important;
+}
+
+td:nth-child(7) {
+	width: 10% !important;
+}
+
+td:nth-child(8) {
+	width: 10% !important;
+}
+
+table input[type="text"], table input[type="number"], table select {
+	width: 100%;
+	box-sizing: border-box;
+	border: none;
+	background: #f9f9f9;
+	padding: 5px;
+	margin: 0;
+	font-size: 14px;
+	height: 30px;
+}
+
+table input[type="text"]:focus, table input[type="number"]:focus, table select:focus
+	{
+	outline: none;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+}
+
+.search_form {
+	display: flex;
+	align-items: center;
+}
+
+.search_form input, .search_form select {
+	margin: 0 10px;
+}
+
+.search_btn {
+	float: right;
+	margin: 10px;
+}
+</style>
+</head>
+<body>
+	<div class="main-content container-fluid" layout:fragment="content">
+		<div>
+			<h1 class="text-center mt-2">Danh Sách Sản Phẩm</h1>
+			<div>
+				<div>
+					<form action="/sanphams/timkiem" method="get">
+						<div class="search_form">
+							<input type="text" name="id" placeholder="Id sản phẩm"
+								class="form-control"> <input type="text"
+								name="tenSanPham" placeholder="Tên sản phẩm"
+								class="form-control"> <input type="text"
+								name="loaiSanPham" placeholder="Loại sản phẩm"
+								class="form-control"> <input type="text" name="giaBan"
+								placeholder="Giá bán" class="form-control"> <input
+								type="text" name="moTa" placeholder="Mô tả" class="form-control">
+							<input type="text" name="soLuong" placeholder="Số lượng"
+								class="form-control"> <select name="trangThai"
+								class="form-control">
+								<option value="">Chọn trạng thái</option>
+								<option value="true">Còn hàng</option>
+								<option value="false">Hết hàng</option>
+							</select>
+						</div>
+						<div class="input-group-append search_btn">
+							<button class="btn btn-primary" type="submit">Tìm Sản
+								Phẩm</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<table th:if="${not #lists.isEmpty(sanphams)}"
+				class="table table-striped">
+				<thead class="bg-primary text-white">
+					<tr>
+						<th>Mã sản phẩm</th>
+						<th>Tên sản phẩm</th>
+						<th>Loại sản phẩm</th>
+						<th>Giá bán</th>
+						<th>Mô tả</th>
+						<th>Số lượng</th>
+						<th>Trạng thái</th>
+						<th>Hành động</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="sanpham : ${sanphams}"
+						th:id="'row_' + ${sanpham.SP_id}">
+						<form th:action="@{/sanphams/saveSanPham}" method="post">
+							<td><span th:id="'id_' + ${sanpham.SP_id}"
+								th:text="${sanpham.SP_id}"></span>
+							<td><span th:id="'display_tensanpham_' + ${sanpham.SP_id}"
+								th:text="${sanpham.SP_TenSanPham}"></span> <input
+								th:id="'edit_tensanpham_' + ${sanpham.SP_id}" type="text"
+								name="SP_TenSanPham" th:value="${sanpham.SP_TenSanPham}"
+								class="hidden"></td>
+							<td><span th:id="'display_loaisanpham_' + ${sanpham.SP_id}"
+								th:text="${sanpham.SP_LoaiSanPham}"></span> <input
+								th:id="'edit_loaisanpham_' + ${sanpham.SP_id}" type="text"
+								name="SP_LoaiSanPham" th:value="${sanpham.SP_LoaiSanPham}"
+								class="hidden"></td>
+							<td><span th:id="'display_giaban_' + ${sanpham.SP_id}"
+								th:text="${sanpham.SP_GiaBan}"></span> <input
+								th:id="'edit_giaban_' + ${sanpham.SP_id}" type="number"
+								name="SP_GiaBan" step="0.01" th:value="${sanpham.SP_GiaBan}"
+								class="hidden"></td>
+							<td><span th:id="'display_mota_' + ${sanpham.SP_id}"
+								th:text="${sanpham.SP_MoTa}"></span> <input
+								th:id="'edit_mota_' + ${sanpham.SP_id}" type="text"
+								name="SP_MoTa" th:value="${sanpham.SP_MoTa}" class="hidden"></td>
+							<td><span th:id="'soluong_' + ${sanpham.SP_id}"
+								th:text="${sanpham.SP_SoLuong}"></span> <input
+								th:id="'edit_soluong_hidden_' + ${sanpham.SP_id}" type="hidden"
+								name="SP_SoLuong" th:value="${sanpham.SP_SoLuong}"
+								class="hidden"></td>
+							<td><span th:id="'trangthai_' + ${sanpham.SP_id}"
+								th:text="${sanpham.SP_TrangThai ? 'Còn hàng' : 'Hết hàng'}"></span>
+
+								<!-- Hidden input để gửi giá trị Boolean true hoặc false --> <input
+								th:id="'edit_trangthai_hidden_' + ${sanpham.SP_id}"
+								type="hidden" name="SP_TrangThai"
+								th:value="${sanpham.SP_TrangThai}"></td>
+
+							<td><button type="button" class="btn btn-primary"
+									th:id="'edit_btn_' + ${sanpham.SP_id}"
+									th:attr="onclick='editProduct(\'' + ${sanpham.SP_id} + '\')'">Sửa
+								</button>
+								<button type="submit" class="btn btn-success hidden"
+									th:id="'save_btn_' + ${sanpham.SP_id}"
+									th:attr="data-id=${sanpham.SP_id}">Lưu</button> <input
+								type="hidden" name="SP_id" th:value="${sanpham.SP_id}">
+
+								<a id="deleteBtn"th:href="@{/sanphams/xoa/{id}(id=${sanpham.SP_id})}" class="btn btn-danger"
+								 th:attr="onclick='delete_btn(\'' + ${sanpham.SP_SoLuong} + '\', \'' + ${sanpham.SP_id} + '\')'">
+									Xóa </a></td>
+						</form>
+					</tr>
+				</tbody>
+			</table>
+			<script>
+				function editProduct(id) {
+					$(`#row_${id} span[id^='display_']`).hide();
+					$(`#row_${id} input[id^='edit_']`).removeClass('hidden');
+					$(`#edit_btn_${id}`).addClass('hidden');
+					$(`#save_btn_${id}`).removeClass('hidden');
+				}
+				function delete_btn(sl, id) {
+				    var del_btn = $('#deleteBtn'); // Sử dụng jQuery để lấy phần tử có id là deleteBtn
+
+				    if (sl <= 0) {
+				        alert('Bạn có chắc chắn muốn xóa sản phẩm này?');
+				        del_btn.attr('href', '/sanphams/xoa/' + id); 
+				    } else {
+				        alert('Không thể xóa sản phẩm này vì số lượng lớn hơn 0.');
+				        del_btn.attr('href', '#'); 
+				    }
+				}
+
+			</script>
+		</div>
+	</div>
+	<p th:if="${#lists.isEmpty(sanphams)}">Không tìm thấy sản phẩm nào.</p>
+
+
+</body>
+
+</html>

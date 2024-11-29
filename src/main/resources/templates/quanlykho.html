@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/dashboard}">
+<head>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản Lý Kho</title>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+</head>
+<body>
+	<div class="main-content container-fluid" layout:fragment="content">
+		<h1 class="text-center mt-4">Quản Lý Kho</h1>
+
+		<!-- Form thêm lô hàng mới -->
+		<div class="row mb-3">
+			<div class="col-6">
+				<div class="dropdown">
+					<button type="button" class="btn btn-primary dropdown-toggle"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						data-bs-auto-close="outside">Thêm lô hàng</button>
+					<form class="dropdown-menu p-4" th:action="@{/quanlykho/add}"
+						method="post">
+						<div class="mb-3">
+							<label for="lspMaSanPham">Mã sản phẩm</label> <input type="text"
+								class="form-control" id="lspMaSanPham" name="lspSpId">
+						</div>
+						<div class="mb-3">
+							<label for="lspMaNhaCungCap">Mã nhà cung cấp</label> <input
+								type="text" class="form-control" id="lspMaNhaCungCap"
+								name="lspNccId" required>
+						</div>
+						<div class="mb-3">
+							<label for="lspTenSanPham">Tên sản phẩm</label> <input
+								type="text" class="form-control" id="lspTenSanPham"
+								name="lspTenSanPham">
+						</div>
+						<div class="mb-3">
+							<label for="lspLoaiSanPham">Loại sản phẩm</label> <input
+								type="text" class="form-control" id="lspLoaiSanPham"
+								name="lspLoaiSanPham">
+						</div>
+						<div class="mb-3">
+							<label for="lspNgayNhap">Ngày nhập</label> <input
+								type="datetime-local" class="form-control" id="lspNgayNhap"
+								name="lspNgayNhap" required>
+						</div>
+						<div class="mb-3">
+							<label for="lspDonGia">Đơn giá</label> <input type="number"
+								class="form-control" id="lspDonGia" name="lspDonGia" required>
+						</div>
+						<div class="mb-3">
+							<label for="lspSoLuong">Số lượng</label> <input type="number"
+								class="form-control" id="lspSoLuong" name="lspSoLuong" required>
+						</div>
+						<div class="mb-3">
+							<label for="thanhTien">Thành tiền</label>
+							<div id="thanhTien">0.00</div>
+							<input type="hidden" id="hiddenThanhTien" name="lspThanhTien">
+						</div>
+						<div class="mb-3">
+							<label for="lspGiaBanLe">Giá bán lẻ</label> <input type="number"
+								class="form-control" id="lspGiaBanLe" name="lspGiaBanLe"
+								required>
+						</div>
+						<div class="mb-3">
+							<label for="lspMoTa">Mô tả</label>
+							<textarea class="form-control" id="lspMoTa" name="lspMoTa"></textarea>
+						</div>
+						<button type="submit" class="btn btn-success">Thêm Lô
+							Hàng</button>
+					</form>
+				</div>
+			</div>
+			<div class="col-6  text-end">
+				<div >
+					<form class="form-inline" th:action="@{/quanlykho/search}"
+						method="post">
+						<input type="text" class="form-control mr-sm-2" id="keyword"
+							name="keyword" placeholder="Tìm kiếm...">
+						<button type="submit" class="btn btn-outline-success my-2 my-sm-0">Tìm
+							kiếm</button>
+					</form>
+				</div>
+			</div>
+
+			<div th:if="${successMessage}" class="alert alert-success"
+				role="alert">
+				<span th:text="${successMessage}"></span>
+			</div>
+			<div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+				<span th:text="${errorMessage}"></span>
+			</div>
+		</div>
+
+		<!-- Danh sách lô hàng -->
+		<div style="margin-top: 20px;">
+			<h3>Danh sách lô hàng</h3>
+			<table class="table table-striped">
+				<thead class="bg-primary text-white">
+					<tr>
+						<th>Mã lô sản phẩm</th>
+						<th>Mã sản phẩm</th>
+						<!-- Thêm cột mới -->
+						<th>Mã nhà cung cấp</th>
+						<!-- Thêm cột mới -->
+						<th>Tên sản phẩm</th>
+						<th>Loại sản phẩm</th>
+						<th>Ngày nhập</th>
+						<th>Đơn giá</th>
+						<th>Số lượng</th>
+						<th>Thành tiền</th>
+						<th>Giá bán lẻ</th>
+						<th>Mô tả</th>
+						<th>Hành động</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="loSanPham : ${loSanPhamList}"
+						th:id="'row-' + ${loSanPham.lspId}">
+						<td th:text="${loSanPham.lspId}"></td>
+						<td th:text="${loSanPham.lspSpId}"></td>
+						<td th:text="${loSanPham.lspNccId}"></td>
+						<td th:text="${loSanPham.lspTenSanPham}"></td>
+						<td th:text="${loSanPham.lspLoaiSanPham}"></td>
+						<td th:text="${loSanPham.lspNgayNhap.toString()}"></td>
+						<td th:text="${loSanPham.lspDonGia}"></td>
+						<td th:text="${loSanPham.lspSoLuong}"></td>
+						<td th:text="${loSanPham.lspThanhTien}"></td>
+						<td th:text="${loSanPham.lspGiaBanLe}"></td>
+						<td th:text="${loSanPham.lspMoTa}"></td>
+						<td>
+
+							<div class="dropdown"
+								style="display: inline; margin-bottom: 20px;">
+								<button type="button" class="btn btn-success dropdown-toggle"
+									data-bs-toggle="dropdown" aria-expanded="false"
+									data-bs-auto-close="outside">Sửa</button>
+								<form class="dropdown-menu p-4 edit-form"
+									th:action="@{/quanlykho/update}" method="post">
+									<input type="hidden" name="lspId" th:value="${loSanPham.lspId}">
+									<div class="mb-3">
+										<label for="lspMaSanPham">Mã sản phẩm</label> <input
+											type="text" class="form-control" id="lspMaSanPham"
+											name="lspSpId" th:value="${loSanPham.lspSpId}">
+									</div>
+									<div class="mb-3">
+										<label for="lspMaNhaCungCap">Mã nhà cung cấp</label> <input
+											type="text" class="form-control" id="lspMaNhaCungCap"
+											name="lspNccId" th:value="${loSanPham.lspNccId}">
+									</div>
+									<div class="mb-3">
+										<label for="lspTenSanPham">Tên sản phẩm</label> <input
+											type="text" class="form-control" id="lspTenSanPham"
+											name="lspTenSanPham" th:value="${loSanPham.lspTenSanPham}">
+									</div>
+									<div class="mb-3">
+										<label for="lspLoaiSanPham">Loại sản phẩm</label> <input
+											type="text" class="form-control" id="lspLoaiSanPham"
+											name="lspLoaiSanPham" th:value="${loSanPham.lspLoaiSanPham}">
+									</div>
+									<div class="mb-3">
+										<label for="lspNgayNhap">Ngày nhập</label> <input
+											type="datetime-local" class="form-control" id="lspNgayNhap"
+											name="lspNgayNhap"
+											th:value="${loSanPham.lspNgayNhap.toString()}">
+									</div>
+									<div class="mb-3">
+										<label for="lspDonGia">Đơn giá</label> <input type="number"
+											class="form-control" id="lspDonGia" name="lspDonGia"
+											th:value="${loSanPham.lspDonGia}">
+									</div>
+									<div class="mb-3">
+										<label for="lspSoLuong">Số lượng</label> <input type="number"
+											class="form-control" id="lspSoLuong" name="lspSoLuong"
+											th:value="${loSanPham.lspSoLuong}">
+									</div>
+
+									<div class="mb-3">
+										<label for="lspSoLuong">Thành tiền</label> <input
+											type="number" class="form-control" id="lspSoLuong"
+											name="lspThanhTien" th:value="${loSanPham.lspThanhTien}">
+									</div>
+
+									<div class="mb-3">
+										<label for="lspGiaBanLe">Giá bán lẻ</label> <input
+											type="number" class="form-control" id="lspGiaBanLe"
+											name="lspGiaBanLe" th:value="${loSanPham.lspGiaBanLe}">
+									</div>
+									<div class="mb-3">
+										<label for="lspMoTa">Mô tả</label>
+										<textarea class="form-control" id="lspMoTa" name="lspMoTa"
+											th:text="${loSanPham.lspMoTa}"></textarea>
+									</div>
+									<button type="submit" class="btn btn-success">Sửa lô
+										hàng</button>
+								</form>
+							</div>
+
+
+
+
+							<form th:action="@{/quanlykho/delete}" method="post"
+								style="display: inline;">
+								<input type="hidden" name="lspId" th:value="${loSanPham.lspId}">
+								<button type="submit" class="btn btn-danger" style="margin: 3px">Xóa</button>
+							</form>
+							<form th:action="@{/quanlykho/invoice}" method="post"
+								style="display: inline;">
+								<input type="hidden" name="lspId" th:value="${loSanPham.lspId}">
+								<button type="submit" class="btn btn-warning"
+									style="margin: 3px">Xuất Hóa Đơn</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+
+
+		<script>
+    document.getElementById('lspDonGia').addEventListener('input', updateThanhTien);
+    document.getElementById('lspSoLuong').addEventListener('input', updateThanhTien);
+
+    function updateThanhTien() {
+        var donGia = parseFloat(document.getElementById('lspDonGia').value);
+        var soLuong = parseInt(document.getElementById('lspSoLuong').value);
+
+        var thanhTien = donGia * soLuong;
+
+        document.getElementById('thanhTien').textContent = thanhTien.toFixed(2); // Định dạng hiển thị số
+
+        document.getElementById('hiddenThanhTien').value = thanhTien.toFixed(2); // Đặt giá trị vào input ẩn
+    }
+    
+    
+</script>
+		<script>
+    document.getElementById('lspSpId').addEventListener('change', function() {
+        var spId = this.value;
+        if (spId) {
+            fetch('/getSanPham/' + spId)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('lspTenSanPham').value = data.spTenSanPham;
+                    document.getElementById('lspLoaiSanPham').value = data.spLoaiSanPham;
+                    document.getElementById('lspTenSanPham').disabled = true;
+                    document.getElementById('lspLoaiSanPham').disabled = true;
+                })
+                .catch(error => {
+                    document.getElementById('lspTenSanPham').value = '';
+                    document.getElementById('lspLoaiSanPham').value = '';
+                    document.getElementById('lspTenSanPham').disabled = false;
+                    document.getElementById('lspLoaiSanPham').disabled = false;
+                });
+        } else {
+            document.getElementById('lspTenSanPham').value = '';
+            document.getElementById('lspLoaiSanPham').value = '';
+            document.getElementById('lspTenSanPham').disabled = false;
+            document.getElementById('lspLoaiSanPham').disabled = false;
+        }
+    });
+</script>
+
+
+
+	</div>
+</body>
+</html>
+

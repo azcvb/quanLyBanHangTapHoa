@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Mã Giảm Giá Mới</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+<div class="container">
+    <h2 class="text-center mt-4">Thêm Mã Giảm Giá Mới</h2>
+    <form th:action="@{/khuyenmai/giamgia/create}" th:object="${giamgia}"
+          method="post">
+        <div class="form-group">
+            <label>Mã Giảm Giá</label> <input name="GG_id" type="text" class="form-control"
+                                                th:field="*{GG_id}">
+        </div>
+        <div class="form-group">
+            <label>Mã Sản Phẩm</label> <input name="GG_SP_id" type="text" class="form-control"
+                                                 th:field="*{GG_SP_id}">
+        </div>
+        <div class="form-group">
+            <label>Tên Giảm Giá</label> <input name="GG_tensanpham" type="text" class="form-control"
+                                                 th:field="*{GG_tensanpham}">
+        </div>
+        <div class="form-group">
+            <label>Chiết Khấu</label> <input name="GG_chietkhau" type="text" class="form-control"
+                                               th:field="*{GG_chietkhau}">
+        </div>
+        <div class="form-group">
+            <label>Ngày Bắt Đầu</label> <input name="GG_ngaybatdau" type="date" class="form-control"
+                                                 th:field="*{GG_ngaybatdau}">
+        </div>
+        <div class="form-group">
+            <label>Ngày Kết Thúc</label> <input name="GG_ngayketthuc" type="date" class="form-control"
+                                                  th:field="*{GG_ngayketthuc}">
+        </div>
+        <div class="form-group">
+            <label>Mô Tả</label> <input name="GG_mota" type="text" class="form-control"
+                                         th:field="*{GG_mota}">
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </form>
+</div>
+</body>
+
+</html>

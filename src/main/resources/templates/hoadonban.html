@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/dashboard}">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách hóa đơn bán</title>
+    <!-- Bootstrap 5 CSS đã được thêm vào -->
+
+    <style>
+        .short-num {
+            font-variant-numeric: tabular-nums !important;
+        }
+        .modal-custom {
+            max-width: 50%; /* Điều chỉnh kích thước tối đa của modal */
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content container-fluid" layout:fragment="content">
+
+        <h1 class="text-center mt-4">HÓA ĐƠN BÁN HÀNG</h1>
+        <div class="row mb-3">
+            <div class="col-6">
+                <form action="/hoadonban/search" method="get" class="input-group">
+                    <input type="text" class="form-control" placeholder="Tìm kiếm..." name="keyword">
+                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </form>
+            </div>
+            <div class="col-6 text-end">
+                <a href="/hoadonban" class="btn btn-secondary">Làm mới</a>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>ID</th>
+                    <th>Nhân viên</th>
+                    <th>Ngày xuất</th>
+                    <th>Tổng tiền</th>
+                    <th>Chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="hoadonban : ${hoadonbans}">
+                    <td class="short-num" th:text="${hoadonban.hdbId}"></td>
+                    <td th:text="${hoadonban.hdbNvId}"></td>
+                    <td th:text="${hoadonban.hdbNgayXuat}"></td>
+                    <td class="short-num" th:text="${hoadonban.hdbTongTien}"></td>
+                    <td>
+                        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" th:data-bs-target="'#modalDetails_' + ${hoadonban.hdbId}">
+                            Xem chi tiết
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" th:id="'modalDetails_' + ${hoadonban.hdbId}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-custom">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Chi tiết hóa đơn</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>ID:</strong> <span th:text="${hoadonban.hdbId}"></span></p>
+                                        <p><strong>Nhân viên:</strong> <span th:text="${hoadonban.hdbNvId}"></span></p>
+                                        <p><strong>Ngày xuất:</strong> <span th:text="${hoadonban.hdbNgayXuat}"></span></p>
+                                        <p><strong>Tổng tiền:</strong> <span th:text="${hoadonban.hdbTongTien}"></span></p>
+                                        
+                                        <div class="card">
+                                            <div class="card-header bg-info text-white">Chi tiết hóa đơn</div>
+                                            <div class="card-body">
+                                                <table class="table table-striped">
+                                                    <thead class="bg-primary text-white">
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>Sản phẩm</th>
+                                                            <th>Số lượng</th>
+                                                            <th>Đơn giá</th>
+                                                            <th>Thành tiền</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr th:each="cthd : ${hoadonban.chiTietHoaDons}">
+                                                            <td th:text="${cthd.cthdId}"></td>
+                                                            <td th:text="${cthd.sanPham.SP_TenSanPham}"></td>
+                                                            <td th:text="${cthd.cthdSoLuong}"></td>
+                                                            <td th:text="${cthd.cthdDonGia}"></td>
+                                                            <td th:text="${cthd.cthdThanhTien}"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

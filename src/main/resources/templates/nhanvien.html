@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/dashboard}">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản Lý Nhân Viên</title>
+
+</head>
+<body>
+	<div class="main-content container-fluid" layout:fragment="content">
+		<div>
+			<h1 class="text-center mt-2">Danh Sách Nhân Viên</h1>
+			<div class="row">
+				<div class="col-md-4">
+					<form action="/nhanvien/search" method="get">
+						<div class="input-group mb-3">
+							<input type="text" name="keyword" class="form-control"
+								placeholder="Tìm kiếm nhân viên">
+							<div class="input-group-append">
+								<button class="btn btn-primary" type="submit">Tìm</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-8 text-right">
+					<a href="/nhanvien/showNewNhanVienForm" class="btn btn-primary">Thêm
+						Nhân Viên</a>
+				</div>
+			</div>
+			<table class="table table-striped">
+				<thead class="bg-primary text-white">
+					<tr>
+						<th>ID</th>
+						<th>Tài Khoản</th>
+						<th>Tên</th>
+						<th>Giới Tính</th>
+						<th>Ngày Sinh</th>
+						<th>Số Điện Thoại</th>
+						<th>Email</th>
+						<th>Địa Chỉ</th>
+						<th>Lương</th>
+						<th>Hành Động</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="nhanVien : ${listNhanVien}">
+						<td th:text="${nhanVien.NV_ID}"></td>
+						<td th:text="${nhanVien.NV_TK_ID}"></td>
+						<td th:text="${nhanVien.NV_Ten}"></td>
+						<td th:text="${nhanVien.NV_GioiTinh}"></td>
+						<td th:text="${nhanVien.NV_NgaySinh}"></td>
+						<td th:text="${nhanVien.NV_SDT}"></td>
+						<td th:text="${nhanVien.NV_Email}"></td>
+						<td th:text="${nhanVien.NV_DiaChi}"></td>
+						<td th:text="${nhanVien.NV_Luong}"></td>
+						<td><a th:href="@{/nhanvien/showFormForUpdate/{id}(id=${nhanVien.getNV_ID()})}"
+							class="btn btn-info btn-sm">Sửa</a>
+
+							<a th:href="@{/nhanvien/deleteNhanVien/{id}(id=${nhanVien.getNV_ID()})}"
+							class="btn btn-danger btn-sm">Xóa</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+
+</html>

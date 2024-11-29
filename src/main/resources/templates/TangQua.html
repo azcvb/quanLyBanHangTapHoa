@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/dashboard}">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản Lý Tặng Quà</title>
+
+</head>
+<body>
+	<div class="main-content container-fluid" layout:fragment="content">
+		<div>
+			<h1 class="text-center mt-2">Danh Sách Tặng Quà</h1>
+			<div class="row">
+				<div class="col-md-4">
+					<form action="/khuyenmai/tangqua/search" method="get">
+						<div class="input-group mb-3">
+							<input type="text" name="keyword" class="form-control"
+								placeholder="Tìm kiếm mã tặng quà">
+							<div class="input-group-append">
+								<button class="btn btn-primary" type="submit">Tìm</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-8 text-right">
+					<a href="/khuyenmai/tangqua/form-create" class="btn btn-primary">Thêm
+						Mã Tặng Quà</a>
+				</div>
+			</div>
+			<table class="table table-striped">
+				<thead class="bg-primary text-white">
+					<tr>
+						<th>ID</th>
+						<th>Mã sản phẩm</th>
+						<th>Tên Tặng Quà</th>
+						<th>Điều kiện</th>
+						<th>Mã sản phẩm tặng</th>
+						<th>Số lượng quà tặng</th>
+						<th>Ngày bắt đầu</th>
+						<th>Ngày kết thúc</th>
+						<th>Mô tả</th>
+						<th>Hành Động</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="tangqua : ${listTangQua}">
+						<td th:text="${tangqua.getTQ_id()}"></td>
+						<td th:text="${tangqua.getTQ_SP_id()}"></td>
+						<td th:text="${tangqua.getTQ_tensanpham()}"></td>
+						<td th:text="${tangqua.getTQ_dieukien()}"></td>
+						<td th:text="${tangqua.getTQ_SP_IDQuaTang()}"></td>
+						<td th:text="${tangqua.getTQ_soluongquatang()}"></td>
+						<td th:text="${tangqua.getTQ_ngaybatdau()}"></td>
+						<td th:text="${tangqua.getTQ_ngayketthuc()}"></td>
+						<td th:text="${tangqua.getTQ_mota()}"></td>
+						<td style="width: 200px">
+							<a th:href="@{/khuyenmai/tangqua/form-update/{id}(id=${tangqua.getTQ_id()})}"
+							class="btn btn-info btn-sm">Sửa</a>
+							<a th:href="@{/khuyenmai/tangqua/delete/{id}(id=${tangqua.getTQ_id()})}"
+							class="btn btn-danger btn-sm">Xóa</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<a class="btn btn-info btn-sm" href="/khuyenmai">Quay lại</a>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/dashboard}">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản Lý Giảm Giá</title>
+
+</head>
+<body>
+	<div class="main-content container-fluid" layout:fragment="content">
+		<div>
+			<h1 class="text-center mt-2">Danh Sách Giảm Giá</h1>
+			<div class="row">
+				<div class="col-md-4">
+					<form action="/khuyenmai/giamgia/search" method="get">
+						<div class="input-group mb-3">
+							<input type="text" name="keyword" class="form-control"
+								placeholder="Tìm kiếm mã giảm giá">
+							<div class="input-group-append">
+								<button class="btn btn-primary" type="submit">Tìm</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-md-8 text-right">
+					<a href="/khuyenmai/giamgia/form-create" class="btn btn-primary">Thêm mã giảm giá</a>
+				</div>
+			</div>
+			<table class="table table-striped">
+				<thead class="bg-primary text-white">
+					<tr>
+						<th>ID</th>
+						<th>Mã sản phẩm</th>
+						<th>Tên giảm giá</th>
+						<th>Chiết khấu</th>
+						<th>Ngày bắt đầu</th>
+						<th>Ngày kết thúc</th>
+						<th>Mô tả</th>
+						<th>Hành Động</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="giamgia : ${listGiamGia}">
+						<td th:text="${giamgia.getGG_id()}"></td>
+						<td th:text="${giamgia.getGG_SP_id()}"></td>
+						<td th:text="${giamgia.getGG_tensanpham()}"></td>
+						<td th:text="${giamgia.getGG_chietkhau()}"></td>
+						<td th:text="${giamgia.getGG_ngaybatdau()}"></td>
+						<td th:text="${giamgia.getGG_ngayketthuc()}"></td>
+						<td th:text="${giamgia.getGG_mota()}"></td>
+						<td>
+							<a th:href="@{/khuyenmai/giamgia/form-update/{id}(id=${giamgia.getGG_id()})}"
+							class="btn btn-info btn-sm">Sửa</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<a class="btn btn-info btn-sm" href="/khuyenmai">Quay lại</a>
+	</div>
+</body>
+
+</html>

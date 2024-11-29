@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/dashboard}">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+	integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+	crossorigin="anonymous"></script>
+<title>Quản Lý Nhà Cung Cấp</title>
+<style>
+.hidden {
+	display: none;
+}
+
+table, th, td {
+	border: none;
+	border-collapse: collapse;
+	padding: 8px;
+	width: 100%;
+	table-layout: fixed;
+}
+
+th, td {
+	text-align: left;
+	vertical-align: middle;
+}
+
+th {
+	background-color: #f2f2f2;
+	height: 40px;
+}
+
+button {
+	padding: 5px 10px;
+	margin: 5px;
+	cursor: pointer;
+}
+
+.add-product {
+	margin-bottom: 15px;
+}
+
+td:nth-child(1) {
+	width: 10%;
+}
+
+td:nth-child(2) {
+	width: 25%;
+}
+
+td:nth-child(3) {
+	width: 20%;
+}
+
+td:nth-child(4) {
+	width: 25%;
+}
+
+td:nth-child(5) {
+	width: 20%;
+}
+
+table input[type="text"], table input[type="number"], table select {
+	width: 100%;
+	box-sizing: border-box;
+	border: none;
+	background: #f9f9f9;
+	padding: 5px;
+	margin: 0;
+	font-size: 14px;
+	height: 30px;
+}
+
+table input[type="text"]:focus, table input[type="number"]:focus, table select:focus
+	{
+	outline: none;
+	border: none;
+	box-sizing: border-box;
+}
+
+.search_form {
+	display: flex;
+	align-items: center;
+}
+
+.search_form input, .search_form select {
+	margin: 0 10px;
+}
+
+.search_btn {
+	float: right;
+	margin: 10px;
+}
+</style>
+</head>
+<body>
+	<div class="main-content container-fluid" layout:fragment="content">
+		<div>
+			<h1 class="text-center mt-2">Danh Sách Nhà Cung Cấp</h1>
+			<div>
+				<div>
+					<form id="nccForm">
+						<div class="search_form">
+							<input type="text" id="id" name="ncc_id"
+								placeholder="Mã nhà cung cấp" class="form-control"> <input
+								type="text" id="tenNcc" name="ncc_ten"
+								placeholder="Tên nhà cung cấp" class="form-control"> <input
+								type="text" id="sdtNcc" name="ncc_sdt"
+								placeholder="Số điện thoại" class="form-control"> <input
+								type="text" id="emailNcc" name="ncc_email" placeholder="Email"
+								class="form-control"> <input type="text" id="diachiNcc"
+								name="ncc_diaChi" placeholder="Địa chỉ" class="form-control">
+						</div>
+						<div class="search_btn">
+							<button type="button" id="themBtn" class="btn btn-primary" onclick="themClick()">Thêm</button>
+							<button type="submit" id="timkiemBtn" class="btn btn-primary " onclick="timkiemClick()">Tìm
+								kiếm</button>
+						</div>
+
+					</form>
+				</div>
+			</div>
+			<table th:if="${not #lists.isEmpty(nccs)}"
+				class="table table-striped">
+				<thead class="bg-primary text-white">
+					<tr>
+						<th>Mã NCC</th>
+						<th>Tên Nhà cung cấp</th>
+						<th>Số điện thoại</th>
+						<th>Email</th>
+						<th>Địa chỉ</th>
+						<th>Hành động</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="ncc : ${nccs}" th:id="'row_' + ${ncc.ncc_id}">
+						<form th:action="@{/ncc/saveNcc}" method="post">
+							<td><span th:id="'id_' + ${ncc.ncc_id}"
+								th:text="${ncc.ncc_id}"></span></td>
+							<td><span th:id="'display_tenNCC_' + ${ncc.ncc_id}"
+								th:text="${ncc.ncc_ten}"></span> <input
+								th:id="'edit_tenNCC_' + ${ncc.ncc_id}" type="text"
+								name="ncc_ten" th:value="${ncc.ncc_ten}" class="hidden"></td>
+							<td><span th:id="'display_sdt_' + ${ncc.ncc_id}"
+								th:text="${ncc.ncc_sdt}"></span> <input
+								th:id="'edit_sdt_' + ${ncc.ncc_id}" type="text" name="ncc_sdt"
+								th:value="${ncc.ncc_sdt}" class="hidden"></td>
+							<td><span th:id="'display_email_' + ${ncc.ncc_id}"
+								th:text="${ncc.ncc_email}"></span> <input
+								th:id="'edit_email_' + ${ncc.ncc_id}" type="text"
+								name="ncc_email" th:value="${ncc.ncc_email}" class="hidden"></td>
+							<td><span th:id="'display_diaChi_' + ${ncc.ncc_id}"
+								th:text="${ncc.ncc_diaChi}"></span> <input
+								th:id="'edit_diaChi_' + ${ncc.ncc_id}" type="text"
+								name="ncc_diaChi" th:value="${ncc.ncc_diaChi}" class="hidden"></td>
+							<td>
+								<button type="button" class="btn btn-primary"
+									th:id="'edit_btn_' + ${ncc.ncc_id}"
+									th:attr="onclick='editNCC(\'' + ${ncc.ncc_id} + '\')'">Sửa
+								</button>
+								<button type="submit" class="btn btn-success hidden"
+									th:id="'save_btn_' + ${ncc.ncc_id}"
+									th:attr="data-id=${ncc.ncc_id}">Lưu</button> <input
+								type="hidden" name="ncc_id" th:value="${ncc.ncc_id}"> <a
+								th:href="@{/ncc/xoa/{id}(id=${ncc.ncc_id})}"
+								class="btn btn-danger"
+								onclick="return confirm('Bạn có chắc chắn muốn xóa Nhà cung cấp này?')">Xóa</a>
+							</td>
+						</form>
+					</tr>
+				</tbody>
+			</table>
+
+			<script>
+				function editNCC(id) {
+					$(`#row_${id} span[id^='display_']`).hide();
+					$(`#row_${id} input[id^='edit_']`).removeClass('hidden');
+					$(`#edit_btn_${id}`).addClass('hidden');
+					$(`#save_btn_${id}`).removeClass('hidden');
+				}
+				function themClick() {
+					var tenNcc = document.getElementById('tenNcc').value.trim();
+					var sdtNcc = document.getElementById('sdtNcc').value.trim();
+					var emailNcc = document.getElementById('emailNcc').value.trim();
+					var diachiNcc = document.getElementById('diachiNcc').value.trim();
+
+					if (tenNcc === '' || sdtNcc === '' || emailNcc === ''
+							|| diachiNcc === '') {
+						alert('Vui lòng điền đầy đủ thông tin. (Không nhập id)');
+					} else {
+						var id = document.getElementById('id').value.trim();
+						if (id === '') {
+							document.getElementById('nccForm').method = 'post';
+							document.getElementById('nccForm').action = '/ncc/saveNcc';
+							document.getElementById('nccForm').submit();
+						} else {
+							confirm('Không nhập id khi thêm');
+						}
+					}
+				}
+
+				function timkiemClick() {
+					document.getElementById('nccForm').method = 'get';
+					document.getElementById('nccForm').action = '/ncc/timkiem';
+					document.getElementById('nccForm').submit();
+				}		
+			</script>
+		</div>
+	</div>
+	<p th:if="${#lists.isEmpty(sanphams)}">Không tìm thấy nhà cung cấp
+		nào.</p>
+
+
+</body>
+</html>

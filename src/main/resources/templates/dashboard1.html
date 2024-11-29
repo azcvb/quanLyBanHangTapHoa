@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/dashboard}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+	<div class="main-content container-fluid" layout:fragment="content">
+		<h1 class="text-center mt-4">THỐNG KÊ</h1>
+
+		<div class="row mb-2">
+			<div class="col-12 col-md-4">
+				<div class="card card-statistic bg-primary">
+					<div class="card-body p-0">
+						<div class="d-flex flex-column">
+							<div class="card-header text-white">Hóa Đơn Nhập</div>
+							<div class="card-body">
+								<p>
+									<strong>Số lượng hóa đơn nhập:</strong> <span
+										th:text="${soLuongHoaDonNhap}"></span>
+								</p>
+								<p>
+									<strong>Tổng tiền hóa đơn nhập:</strong> <span
+										th:text="${tongTienHoaDonNhap}"></span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-12 col-md-4">
+				<div class="card card-statistic bg-secondary">
+					<div class="card-body p-0">
+						<div class="d-flex flex-column">
+							<div class="card-header text-white">Hóa Đơn Bán</div>
+							<div class="card-body">
+								<p>
+									<strong>Số lượng hóa đơn bán:</strong> <span
+										th:text="${soLuongHoaDonBan}"></span>
+								</p>
+								<p>
+									<strong>Tổng tiền hóa đơn bán:</strong> <span
+										th:text="${tongTienHoaDonBan}"></span>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-12 col-md-4">
+				<div class="card card-statistic bg-info">
+					<div class="card-body p-0">
+						<div class="d-flex flex-column">
+							<div class="card-header text-white">Sản Phẩm</div>
+							<div class="card-body">
+								<p>
+									<strong>Số lượng sản phẩm trong kho:</strong> <span
+										th:text="${tongSoLuongSanPham}"></span>
+								</p>
+								<p>
+									<strong>Giá trị sản phẩm:</strong>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mb-4">
+			<div class="col-md-8">
+				<div class="card">
+					<div class="container mt-5">
+						<h2>Doanh thu theo tháng</h2>
+						<canvas id="revenueChart"></canvas>
+						<div id="totalRevenue" class="mt-3"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="card">
+					<h2 class="container mt-5">Tỷ lệ sản phẩm bán</h2>
+					<canvas id="productSalesRatioChart"></canvas>
+				</div>
+			</div>
+			<div class="col-md-8">
+				<div class="card">
+					<h2 class="container mt-5">Doanh thu theo nhân viên</h2>
+					<canvas id="employeeRevenueChart"></canvas>
+				</div>
+			</div>
+			
+		</div>
+
+		<script>
+			// Function to create line chart
+			function createLineChart(ctx, labels, data, title) {
+				return new Chart(ctx, {
+					type: 'line',
+					data: {
+						labels: labels,
+						datasets: [{
+							label: title,
+							data: data,
+							borderColor: 'rgba(75, 192, 192, 1)',
+							borderWidth: 1
+						}]
+					},
+					options: {
+						scales: {
+							y: {
+								beginAtZero: true,
+								callback: function(value) {
+									return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+								}
+							}
+						}
+					}
+				});
+			}
+
+			// Function to create bar chart
+			function createBarChart(ctx, labels, datasets) {
+				return new Chart(ctx, {
+					type: 'bar',
+					data: {
+						labels: labels,
+						datasets: datasets
+					},
+					options: {
+						scales: {
+							y: {
+								beginAtZero: true,
+								callback: function(value) {
+									return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+								}
+							}
+						}
+					}
+				});
+			}
+
+			// Fetch revenue data by month
+			fetch('/thongke/json')
+				.then(response => response.json())
+				.then(data => {
+					const ctx = document.getElementById('revenueChart').getContext('2d');
+					createLineChart(ctx, data.labels, data.data, 'Doanh thu');
+
+					// Calculate total revenue
+					const totalRevenue = data.data.reduce((total, monthRevenue) => total + monthRevenue, 0);
+
+					// Display total revenue if element exists
+					const totalRevenueElement = document.getElementById('totalRevenue');
+					if (totalRevenueElement) {
+						totalRevenueElement.innerHTML = `<h4>Tổng doanh thu: ${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalRevenue)}</h4>`;
+					} else {
+						console.error('Element with id "totalRevenue" not found.');
+					}
+				});
+
+			// Fetch employee revenue data by month
+			fetch('/thongke/nhanvien/json')
+				.then(response => response.json())
+				.then(data => {
+					const ctx = document.getElementById('employeeRevenueChart').getContext('2d');
+
+					const labels = ["Nhân viên A", "Nhân viên B"]; // Replace with actual employee names if available
+					const datasets = data.labels.map((label, index) => {
+						let backgroundColor, borderColor;
+						if (label === "Nhân viên B") {
+							backgroundColor = `rgba(255, 159, 64, 0.5)`;
+							borderColor = `rgba(255, 159, 64, 1)`;
+						} else {
+							backgroundColor = `rgba(${75 + index * 20}, 192, 192, 0.5)`;
+							borderColor = `rgba(${75 + index * 20}, 192, 192, 1)`;
+						}
+						return {
+							label: label,
+							data: data.data[index],
+							backgroundColor: backgroundColor,
+							borderColor: borderColor,
+							borderWidth: 1
+						};
+					});
+
+					const employeeRevenueChart = createBarChart(ctx, labels, datasets);
+				});
+
+			// Fetch product sales ratio data
+			fetch('/thongke/sanpham/json')
+				.then(response => response.json())
+				.then(data => {
+					const ctx = document.getElementById('productSalesRatioChart').getContext('2d');
+
+					const totalSales = data.data.reduce((sum, value) => sum + value, 0);
+					const percentages = data.data.map(value => (value / totalSales * 100).toFixed(2));
+
+					const colors = [
+						'rgba(255, 99, 132, 0.5)',
+						'rgba(54, 162, 235, 0.5)',
+						'rgba(255, 206, 86, 0.5)',
+						'rgba(75, 192, 192, 0.5)',
+						'rgba(153, 102, 255, 0.5)',
+						'rgba(255, 159, 64, 0.5)'
+					];
+
+					const productSalesRatioChart = new Chart(ctx, {
+						type: 'pie',
+						data: {
+							labels: data.labels,
+							datasets: [{
+								label: 'Tỷ lệ sản phẩm bán',
+								data: data.data,
+								backgroundColor: colors,
+								borderColor: colors,
+								hoverOffset: 4
+							}]
+						},
+						options: {
+							plugins: {
+								tooltip: {
+									callbacks: {
+										label: function(context) {
+											let label = context.label || '';
+											if (label) {
+												label += ': ';
+											}
+											const value = context.raw || '';
+											if (value) {
+												label += new Intl.NumberFormat('vi-VN', { style: 'percent' }).format(value / totalSales);
+											}
+											return label;
+										}
+									}
+								}
+							}
+						}
+					});
+				});
+		</script>
+
+	</div>
+</body>
+</html>

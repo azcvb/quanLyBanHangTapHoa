@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cập Nhật Mã Tặng Quà</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+<div class="container">
+    <h2 class="text-center mt-4">Cập Nhật Mã Tặng Quà</h2>
+    <form th:action="@{/khuyenmai/tangqua/update}" th:object="${tangQua}"
+          method="post">
+        <div class="form-group">
+            <label>Mã Tặng Quà</label> <input name="TQ_id" type="text" class="form-control"
+                                                th:field="*{TQ_id}">
+        </div>
+        <div class="form-group">
+            <label>Mã Sản Phẩm</label> <input name="TQ_SP_id" type="text" class="form-control"
+                                                 th:field="*{TQ_SP_id}">
+        </div>
+        <div class="form-group">
+            <label>Tên Sản Phẩm</label> <input name="TQ_tensanpham" type="text" class="form-control"
+                                                 th:field="*{TQ_tensanpham}">
+        </div>
+        <div class="form-group">
+            <label>Điều Kiện</label> <input name="TQ_dieukien" type="text" class="form-control"
+                                              th:field="*{TQ_dieukien}">
+        </div>
+        <div class="form-group">
+            <label>Mã Sản Phẩm Tặng</label> <input name="TQ_SP_IDQuaTang" type="text" class="form-control"
+                                                       th:field="*{TQ_SP_IDQuaTang}">
+        </div>
+        <div class="form-group">
+            <label>Số Lượng Quà Tặng</label> <input name="TQ_soluongquatang" type="text" class="form-control"
+                                                        th:field="*{TQ_soluongquatang}">
+        </div>
+        <div class="form-group">
+            <label>Ngày Bắt Đầu</label> <input name="TQ_ngaybatdau" type="date" class="form-control"
+                                                 th:field="*{TQ_ngaybatdau}">
+        </div>
+        <div class="form-group">
+            <label>Ngày Kết Thúc</label> <input name="TQ_ngayketthuc" type="date" class="form-control"
+                                                  th:field="*{TQ_ngayketthuc}">
+        </div>
+        <div class="form-group">
+            <label>Mô Tả</label> <input name="TQ_mota" type="text" class="form-control"
+                                         th:field="*{TQ_mota}">
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu</button>
+    </form>
+</div>
+</body>
+
+</html>
